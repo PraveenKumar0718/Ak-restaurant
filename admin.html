@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AK Biryani House — Owner Dashboard</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="admin.css"></head>
+<body>
+<header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">AK</span><span><b>AK BIRYANI</b><small>OWNER</small></span></a><button id="logout" class="ghost-btn">Logout</button></header>
+<main class="admin-wrap">
+<div id="loginBox" class="admin-card"><p class="eyebrow">OWNER ACCESS</p><h1>Restaurant Dashboard</h1><p>Sign in with the owner account you created in Supabase Auth.</p><input id="email" type="email" placeholder="Owner email"><input id="password" type="password" placeholder="Password"><button class="primary full" onclick="adminLogin()">Sign in</button><p id="adminMsg"></p></div>
+<div id="dashboard" class="hidden"><div class="admin-head"><div><p class="eyebrow">LIVE ORDERS</p><h1>AK Biryani House</h1></div><button class="primary" onclick="loadOrders()">Refresh</button></div><div class="stats"><div><small>Total orders</small><b id="statTotal">0</b></div><div><small>Placed / active</small><b id="statActive">0</b></div><div><small>Revenue</small><b id="statRevenue">₹0</b></div></div><div class="orders" id="orders"></div></div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script>
+let sb=null;if(window.SUPABASE_URL&&!window.SUPABASE_URL.startsWith("PASTE_"))sb=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY);
+const $=s=>document.querySelector(s), money=n=>"₹"+Number(n).toLocaleString("en-IN");
+async function adminLogin(){if(!sb)return msg("Connect Supabase first.");const {error}=await sb.auth.signInWithPassword({email:$("#email").value,password:$("#password").value});if(error)return msg(error.message);const {data}=await sb.from("profiles").select("role").single();if(!data||data.role!=="admin"){await sb.auth.signOut();return msg("This account is not marked as admin. Run the SQL role update shown in schema.sql.");}$("#loginBox").classList.add("hidden");$("#dashboard").classList.remove("hidden");loadOrders()}
+function msg(x){$("#adminMsg").textContent=x}
+async function loadOrders(){const {data,error}=await sb.from("orders").select("*").order("created_at",{ascending:false});if(error)return msg(error.message);$("#statTotal").textContent=data.length;$("#statActive").textContent=data.filter(o=>!["delivered","cancelled"].includes(o.status)).length;$("#statRevenue").textContent=money(data.reduce((a,o)=>a+Number(o.total),0));$("#orders").innerHTML=data.map(o=>`<article class="order-card"><div><b>${o.order_code}</b><span>${new Date(o.created_at).toLocaleString("en-IN")}</span></div><h3>${o.customer_name} · ${o.phone}</h3><p>${o.address}${o.landmark?" · "+o.landmark:""}</p><p>${(o.items||[]).map(i=>`${i.name} × ${i.qty}`).join(" · ")}</p><div class="order-bottom"><strong>${money(o.total)}</strong><select onchange="updateStatus('${o.id}',this.value)">${["placed","confirmed","preparing","out_for_delivery","delivered","cancelled"].map(s=>`<option ${s===o.status?"selected":""}>${s}</option>`).join("")}</select></div></article>`).join("")||"<p>No orders yet.</p>"}
+async function updateStatus(id,status){const {error}=await sb.from("orders").update({status}).eq("id",id);if(error)msg(error.message);else loadOrders()}
+$("#logout").onclick=async()=>{if(sb)await sb.auth.signOut();location.reload()}
+</script></body></html>

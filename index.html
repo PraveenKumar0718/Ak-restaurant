@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AK Biryani House | Hyderabad Taste</title>
+<meta name="description" content="AK Biryani House — authentic Hyderabad-style biryani, chicken, mutton and combos. Order online.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<header class="topbar">
+  <a class="brand" href="#"><span class="brand-mark">AK</span><span><b>AK BIRYANI</b><small>HOUSE</small></span></a>
+  <nav>
+    <a href="#menu">Menu</a><a href="#about">About</a><a href="#contact">Contact</a>
+    <button id="loginNav" class="ghost-btn">Login</button>
+    <button id="cartNav" class="cart-btn">Cart <span id="cartCount">0</span></button>
+  </nav>
+  <button id="mobileMenu" class="hamb">☰</button>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">✦ THE TASTE OF HYDERABADI TRADITION ✦</p>
+    <h1>Royal Biryani.<br><em>Real Flavour.</em></h1>
+    <p class="hero-text">Slow-cooked basmati rice, aromatic spices and tender pieces of chicken or mutton — made fresh for every order.</p>
+    <div class="hero-actions"><button class="primary" onclick="scrollToMenu()">Explore Menu <span>→</span></button><button class="outline" onclick="openLogin()">Login / Continue</button></div>
+    <div class="trust"><span>★ 4.1</span><span>5.7K+ Reviews</span><span>Open till 10:30 PM</span></div>
+  </div>
+  <div class="hero-art">
+    <div class="steam s1"></div><div class="steam s2"></div><div class="steam s3"></div>
+    <div class="plate"><div class="rice"></div><div class="meat m1"></div><div class="meat m2"></div><div class="meat m3"></div><span>AK</span></div>
+    <div class="gold-ring"></div>
+  </div>
+</section>
+
+<section class="strip"><div>🔥 Freshly cooked</div><div>🚴 Fast delivery</div><div>🍚 Premium basmati</div><div>⭐ 4.1 customer rating</div></section>
+
+<section id="menu" class="menu-section">
+  <div class="section-head"><div><p class="eyebrow">OUR MENU</p><h2>Choose your favourite</h2></div><div class="search-wrap">⌕ <input id="search" placeholder="Search biryani, chicken..."></div></div>
+  <div id="categories" class="categories"></div>
+  <div id="menuGrid" class="menu-grid"></div>
+</section>
+
+<section id="about" class="about">
+  <div class="about-art"><div class="mini-plate"><div class="rice"></div><div class="meat m1"></div><div class="meat m2"></div></div></div>
+  <div><p class="eyebrow">WHY AK BIRYANI HOUSE</p><h2>Made with patience.<br><em>Served with pride.</em></h2>
+  <p>Our kitchen follows the traditional dum method: fragrant basmati rice layered with marinated meat, saffron, fried onions and our signature spice blend.</p>
+  <div class="features"><div><b>01</b><span>Fresh ingredients every day</span></div><div><b>02</b><span>Traditional dum cooking</span></div><div><b>03</b><span>Careful hygienic packing</span></div></div></div>
+</section>
+
+<section id="contact" class="contact"><div><p class="eyebrow">VISIT US</p><h2>AK Biryani House</h2><p>Kothapeta, Guntur, Andhra Pradesh – 522001</p></div><div><p>Open daily</p><b>11:00 AM – 10:30 PM</b></div><div><p>Need help?</p><b>Call the restaurant</b></div></section>
+</main>
+
+<footer><div class="brand"><span class="brand-mark">AK</span><span><b>AK BIRYANI</b><small>HOUSE</small></span></div><p>© 2026 AK Biryani House. Built for a real online ordering experience.</p><a href="admin.html">Owner / Admin</a></footer>
+
+<!-- Login modal -->
+<div id="loginModal" class="modal hidden">
+ <div class="modal-card">
+  <button class="close" onclick="closeLogin()">×</button>
+  <div id="phoneStep">
+    <p class="eyebrow">SECURE LOGIN</p><h2>Login with phone</h2><p>We will send a real OTP by SMS.</p>
+    <label>Mobile number</label><div class="phone-row"><span>+91</span><input id="phone" inputmode="numeric" maxlength="10" placeholder="9876543210"></div>
+    <button class="primary full" onclick="sendOTP()">Send OTP</button>
+    <small>By continuing you agree to our Terms & Privacy Policy.</small>
+  </div>
+  <div id="otpStep" class="hidden">
+    <p class="eyebrow">VERIFY OTP</p><h2>Enter your code</h2><p id="otpHint">The code was sent to your phone.</p>
+    <input id="otp" class="otp-input" inputmode="numeric" maxlength="6" placeholder="••••••">
+    <button class="primary full" onclick="verifyOTP()">Verify & Continue</button>
+    <button class="text-btn" onclick="sendOTP()">Resend OTP</button>
+  </div>
+ </div>
+</div>
+
+<!-- Cart / checkout drawer -->
+<div id="drawer" class="drawer hidden"><div class="drawer-panel">
+ <div class="drawer-head"><h2>Your Cart</h2><button onclick="closeCart()">×</button></div>
+ <div id="cartItems"></div><div class="totals"><span>Subtotal</span><b id="subtotal">₹0</b><span>Delivery</span><b>₹40</b><strong>Total</strong><strong id="total">₹40</strong></div>
+ <button class="primary full" onclick="startCheckout()">Proceed to Checkout →</button>
+</div></div>
+
+<div id="checkoutModal" class="modal hidden"><div class="modal-card wide">
+ <button class="close" onclick="closeCheckout()">×</button>
+ <p class="eyebrow">DELIVERY DETAILS</p><h2>Where should we deliver?</h2>
+ <div class="form-grid"><label>Full name<input id="name" placeholder="Your name"></label><label>Phone<input id="deliveryPhone" placeholder="9876543210"></label><label class="wide-field">Address<textarea id="address" rows="3" placeholder="House / street / area"></textarea></label><label>Landmark<input id="landmark" placeholder="Optional"></label><label>Payment<select id="payment"><option value="cod">Cash on Delivery</option><option value="upi">UPI / Google Pay</option><option value="card">Card / Net Banking</option></select></label></div>
+ <p class="notice">Online payment buttons are intentionally connected only after you add a real payment gateway account. COD works immediately.</p>
+ <button class="primary full" onclick="placeOrder()">Place Order →</button>
+ </div></div>
+
+<div id="successModal" class="modal hidden"><div class="modal-card center"><div class="success-icon">✓</div><p class="eyebrow">ORDER CONFIRMED</p><h2>Thank you!</h2><p>Your order was saved successfully.</p><div id="orderNumber" class="order-number"></div><button class="primary full" onclick="closeSuccess()">Continue Shopping</button></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
